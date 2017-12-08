@@ -1,0 +1,5 @@
+24000/s/ Joe Namath was drafted by the Jets in the 1965 AFL Draft out of the University of Alabama. If he had not chosen to play in the AFL he may have played his career as the quarterback of the St. Louis Cardinals as they were the team that picked him in the NFL Draft.
+24001/s/ When the New York Jets franchise originally began play, not only were they known as the New York Titans, but their team colors were also blue and gold.
+24002/s/ In the 1998 NFL playoffs, New York Jets wide receiver Keyshawn Johnson saw actions as a defensive back and ended up snagging an interception.
+24003/s/ When the Jets played the Patriots in December of 2005, Vinny Testaverde was the quarterback for New York while veteran Doug Flutie was the quarterback for New England. This was the first time in NFL history that two quarterbacks over the age of forty competed against each other in a regular season game.
+24004/s/  The first New York Jets player to gain more than 1,000 yards rushing in a season was running back John Riggins in 1975.

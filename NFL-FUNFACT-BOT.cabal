@@ -1,0 +1,60 @@
+name:                NFL-FUNFACT-BOT
+version:             0.3.3.1
+-- synopsis:
+-- description:
+homepage:            https://github.com/EvanCrane/NFL-FUNFACT-BOT#readme
+license:             BSD3
+license-file:        LICENSE
+author:              Evan Crane
+maintainer:          evanf.crane@gmail.com
+copyright:           2017 Evan Crane
+--category:            Other
+build-type:          Simple
+extra-source-files:  README.md, ChangeLog.md
+cabal-version:       >=1.10
+
+library
+  exposed-modules:
+    Bot
+  other-modules:
+    LogFilePaths
+  build-depends:
+    base >= 4.7 && < 4.10,
+    data-default-class,
+    optparse-applicative,
+    reddit,
+    text,
+    time,
+    transformers,
+    random,
+    split
+  hs-source-dirs: src/
+  default-language: Haskell2010
+  default-extensions:
+    OverloadedStrings
+  ghc-options: -Wall
+
+executable NFL-FUNFACT-BOT-exe
+  hs-source-dirs:      app/
+  main-is:             Main.hs
+  ghc-options:         -Wall
+  build-depends:       
+    base >= 4.7 && < 4.10,
+    NFL-FUNFACT-BOT
+  default-language:    Haskell2010
+  default-extensions:
+    OverloadedStrings
+
+test-suite NFL-FUNFACT-BOT-test
+  type:                exitcode-stdio-1.0
+  hs-source-dirs:      test
+  main-is:             Spec.hs
+  build-depends:       
+    base >= 4.7 && < 4.10,
+    NFL-FUNFACT-BOT
+  ghc-options:         -Wall
+  default-language:    Haskell2010
+
+source-repository head
+  type:     git
+  location: https://github.com/EvanCrane/NFL-FUNFACT-BOT

@@ -1,0 +1,5 @@
+32000/s/ Original Franchise Location/Name: The Redskins franchise began in 1932 in Boston, Massachusetts. The team used the nickname "Braves." The team became known as the "Redskins" in 1933 and moved to Washington, D.C. in 1937.
+32001/s/ First Playoff Appearance: A 21-6 loss to the Green Bay Packers in the 1936 NFL Championship Game played at the Polo Grounds in New York, 12/13/36.
+32002/s/ On 10/16/38, halfback Andy Farkas ran the wrong way and was tackled for a safety. Farkas, however, went from goat to hero when he led the Redskins to a 7-5 comeback win over the Detroit Lions.
+32003/s/ Most Receptions, Career: Art Monk, 888 receptions (1980-1993).
+32004/s/ First to Rush 200 Yards in a Game: Cliff Battles, 215 yards vs. New York Giants, 10/8/33 was the first player in NFL history to rush for 200 yards in a single game.
