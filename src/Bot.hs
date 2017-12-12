@@ -75,16 +75,12 @@ argsParser = Args <$> (Username <$> argument text (metavar "USERNAME"))
                   <*> optional (option str (long "log-file" <> metavar "LOG"))
     where text = fmap Text.pack str
 
-
-
-
-
-
-
 --Run bot starts the bot process and is where most of the executable code is
 runBot :: Args -> IO ()
 runBot a@(Args userName passWord _log) = do
-    putStrLn "+++++ STARTING BOT THREAD +++++"
+    putStrLn "RUNNING BOT VERSION 0.3.3.3"
+    writeToLogFile "RUNNING BOT VERSION 0.3.3.3"
+    putStrLn "+++++ STARTING BOT THREAD +++++"    
     writeToLogFile "+++++ STARTING BOT THREAD +++++"
 
     --Load in Fact lists
@@ -98,7 +94,7 @@ runBot a@(Args userName passWord _log) = do
 
     --Defining the login options necessary for Reddit Account login
     let opts = def { loginMethod = Credentials u passWord,
-        customUserAgent = Just "NFL_FUNFACT_BOT v0.1.3.0" }
+        customUserAgent = Just "NFL_FUNFACT_BOT v0.3.3.x" }
 
     response <- runRedditWith opts $ do
 
@@ -119,13 +115,13 @@ runBot a@(Args userName passWord _log) = do
                 else forM_ messages $ \replyMess -> do                    
                     if (isMentioned userName (body replyMess)) 
                         then if isJust (containsTeam (body replyMess))
-                                then do teamReply <- liftIO $ buildReplyText (teamFactReply allFacts (body replyMess)) (replyText)
+                                then do teamReply <- liftIO $ buildReplyText (teamFactReply allFacts (body replyMess)) replyText
                                         resp <- reply (messageID replyMess) teamReply
                                         liftIO $ Text.putStrLn "*** Found team related mention ***"
                                         liftIO $ writeToLogFile "*** Found team related mention ***"
                                         liftIO $ Text.putStrLn $ "***Team Reply Comment ID: " <> (Text.pack . show ) resp <> "..."
                                         liftIO $ writeToLogFile $ (Text.unpack) ("***Team Reply Comment ID: " <> (Text.pack . show ) resp <> "...")
-                                    else do fact <- liftIO $ randomFactReply allFacts
+                                    else do fact <- liftIO $ buildReplyText (randomFactReply allFacts) replyText
                                             res <- replyWithText fact (messageID replyMess)                                        
                                             liftIO $ Text.putStrLn $ "***Replied to comment: " <> textShow (messageID replyMess) <> "..."
                                             liftIO $ writeToLogFile $ (Text.unpack) ("***Replied to comment: " <> textShow (messageID replyMess) <> "...")
@@ -306,6 +302,7 @@ teamFactReply assoc txt = do
                         else do putStrLn "----[teamFactReply]: Problem getting team fact ----"
                                 return ((Text.pack) "----[teamFactReply]There was a problem getting the team fact reply ----")
             else do putStrLn "----[teamFactReply]: Problem getting team type. Just getting a random fact instead. This block should never be seen ---- "
+                    writeToLogFile $ (Text.unpack) "----[teamFactReply]: Problem getting team type. Just getting a random fact instead. This block should never be seen ---- "
                     randomReply <- randomFactReply assoc
                     return randomReply
             
@@ -323,7 +320,7 @@ getRandomFactAssoc assoc = do
 getTeamFact :: [(Int,Text)] -> FactType -> IO (Maybe Text)
 getTeamFact assoc factType = do
     key <- getTeamKey factType
-    let fact = lookupFact key assoc
+    let fact = lookupTeamFact key assoc
     return fact
 
 getTeamKey :: FactType -> IO Int
@@ -450,6 +447,40 @@ determineFilePath' factType | factType == Cardinals = cardinalsFactFile
                             | factType == Redskins = redskinsFactFile
                             | otherwise = genFactFile
 
+determineTeamFromKey :: Int -> FactType
+determineTeamFromKey x | x >= (fromEnum Cardinals) * 1000 && x < (fromEnum Falcons) * 1000 = Cardinals 
+                       | x >= (fromEnum Falcons) * 1000 && x < (fromEnum Ravens) * 1000 = Falcons
+                       | x >= (fromEnum Ravens) * 1000 && x < (fromEnum Bills) * 1000 = Ravens
+                       | x >= (fromEnum Bills) * 1000 && x < (fromEnum Panthers) * 1000 = Bills
+                       | x >= (fromEnum Panthers) * 1000 && x < (fromEnum Bears) * 1000 = Panthers
+                       | x >= (fromEnum Bears) * 1000 && x < (fromEnum Bengals) * 1000 = Bears
+                       | x >= (fromEnum Bengals) * 1000 && x < (fromEnum Browns) * 1000 = Bengals
+                       | x >= (fromEnum Browns) * 1000 && x < (fromEnum Cowboys) * 1000 = Browns
+                       | x >= (fromEnum Cowboys) * 1000 && x < (fromEnum Broncos) * 1000 = Cowboys
+                       | x >= (fromEnum Broncos) * 1000 && x < (fromEnum Lions) * 1000 = Broncos
+                       | x >= (fromEnum Lions) * 1000 && x < (fromEnum Packers) * 1000 = Lions
+                       | x >= (fromEnum Packers) * 1000 && x < (fromEnum Texans) * 1000 = Packers
+                       | x >= (fromEnum Texans) * 1000 && x < (fromEnum Colts) * 1000 = Texans
+                       | x >= (fromEnum Colts) * 1000 && x < (fromEnum Jaguars) * 1000 = Colts
+                       | x >= (fromEnum Jaguars) * 1000 && x < (fromEnum Chiefs) * 1000 = Jaguars
+                       | x >= (fromEnum Chiefs) * 1000 && x < (fromEnum Chargers) * 1000 = Chiefs
+                       | x >= (fromEnum Chargers) * 1000 && x < (fromEnum Rams) * 1000 = Chargers
+                       | x >= (fromEnum Rams) * 1000 && x < (fromEnum Dolphins) * 1000 = Rams
+                       | x >= (fromEnum Dolphins) * 1000 && x < (fromEnum Vikings) * 1000 = Dolphins
+                       | x >= (fromEnum Vikings) * 1000 && x < (fromEnum Patriots) * 1000 = Vikings
+                       | x >= (fromEnum Patriots) * 1000 && x < (fromEnum Saints) * 1000 = Patriots
+                       | x >= (fromEnum Saints) * 1000 && x < (fromEnum Giants) * 1000 = Saints
+                       | x >= (fromEnum Giants) * 1000 && x < (fromEnum Jets) * 1000 = Giants
+                       | x >= (fromEnum Jets) * 1000 && x < (fromEnum Raiders) * 1000 = Jets
+                       | x >= (fromEnum Raiders) * 1000 && x < (fromEnum Eagles) * 1000 = Raiders
+                       | x >= (fromEnum Eagles) * 1000 && x < (fromEnum Steelers) * 1000 = Eagles
+                       | x >= (fromEnum Steelers) * 1000 && x < (fromEnum Niners) * 1000 = Steelers
+                       | x >= (fromEnum Niners) * 1000 && x < (fromEnum Seahawks) * 1000 = Niners
+                       | x >= (fromEnum Seahawks) * 1000 && x < (fromEnum Buccaneers) * 1000 = Seahawks
+                       | x >= (fromEnum Buccaneers) * 1000 && x < (fromEnum Titans) * 1000 = Buccaneers
+                       | x >= (fromEnum Titans) * 1000 && x < (fromEnum Redskins) * 1000 = Titans
+                       | x >= (fromEnum Redskins) * 1000 = Redskins
+                       | otherwise = General
 
 getFactLength :: FilePath -> IO Int
 getFactLength fp = do
@@ -462,7 +493,21 @@ getFactLength fp = do
 ----------------------------
         
 lookupFact :: Int -> [(Int,Text)] -> Maybe Text
-lookupFact key assocList = lookup key assocList
+lookupFact key assocList = do 
+    let fact = lookup key assocList
+    let fullFact = lookupFact' key assocList fact
+    if isJust fullFact
+        then fullFact
+            else Nothing
+
+lookupFact' :: Int -> [(Int,Text)] -> Maybe Text -> Maybe Text
+lookupFact' key assocList fact = do 
+    if isJust fact
+        then Just ((Text.pack . show) (determineTeamFromKey key) <> Text.pack " Fact: " <> fromJust fact)
+            else Nothing
+            
+lookupTeamFact :: Int -> [(Int,Text)] -> Maybe Text
+lookupTeamFact key assocList = lookup key assocList
 
 --ReadIn File Section
 
@@ -475,15 +520,15 @@ fileLogReader fp = do
 
 fileReader :: FilePath -> IO [(Int, Text)]
 fileReader fp = do 
-    putStrLn "[fileReader]: fileReader starting using given file path"
+    --putStrLn "[fileReader]: fileReader starting using given file path"
     --Read File Lazily
     content <- readFile fp
     --Converts single long input string to separate line list
     lineList <- fmap lines (readFile fp)
-    putStrLn "[fileReader]: Converting lines to Associated List"
+    --putStrLn "[fileReader]: Converting lines to Associated List"
     --Convert read in content to assoc list
     let assocList = map splitLineToAssoc lineList
-    putStrLn "[fileReader]: Converted to Associated List"
+    --putStrLn "[fileReader]: Converted to Associated List"
     return assocList
 
 readInFileToList :: FilePath -> IO [String]

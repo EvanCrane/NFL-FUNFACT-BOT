@@ -1,9 +1,9 @@
 name:                NFL-FUNFACT-BOT
-version:             0.3.3.1
+version:             0.3.3.3
 -- synopsis:
 -- description:
 homepage:            https://github.com/EvanCrane/NFL-FUNFACT-BOT#readme
-license:             BSD3
+license:             MIT
 license-file:        LICENSE
 author:              Evan Crane
 maintainer:          evanf.crane@gmail.com
